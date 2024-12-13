@@ -12,7 +12,7 @@ spring:
     gateway:
       routes:
         - id: point_service
-          uri: http://point-svc
+          uri: http://point-svc #같은 NAMESPACE 안에서는 SERVICE NAME만으로도 통신이 가능, 단 포트가 80이 아니면 별도 명시 필요
           predicates:
             - Path=/api/points/**
           filters:
@@ -31,7 +31,7 @@ resilience4j:
   bulkhead:
     configs:
       default:
-        maxConcurrentCalls: ${BULKHEAD_DEFAULT_MAX_CONCURRENT_CALLS:50}
+        maxConcurrentCalls: ${BULKHEAD_DEFAULT_MAX_CONCURRENT_CALLS:50} #웹MVC면 쓰레드가 맞는데, 웹 클라이언트에선 maxConcurrentCalls, 비슷한 개념이다
         maxWaitDuration: ${BULKHEAD_DEFAULT_MAX_WAIT_DURATION:500}ms
       mart:
         maxConcurrentCalls: ${BULKHEAD_MART_MAX_CONCURRENT_CALLS:100}
@@ -60,10 +60,10 @@ resilience4j:
   circuitbreaker:
     configs:
       default:
-        slidingWindowSize: ${CB_SLIDING_WINDOW_SIZE:10}
-        failureRateThreshold: ${CB_FAILURE_RATE_THRESHOLD:50}
-        waitDurationInOpenState: ${CB_WAIT_DURATION_IN_OPEN:30000}
-        permittedNumberOfCallsInHalfOpenState: ${CB_PERMITTED_CALLS_IN_HALF_OPEN:5}
+        slidingWindowSize: ${CB_SLIDING_WINDOW_SIZE:10} #몇 개를 가지고 실패율을 계산할것이냐
+        failureRateThreshold: ${CB_FAILURE_RATE_THRESHOLD:50} #50% 실패하면 서킷 브레이커 오픈
+        waitDurationInOpenState: ${CB_WAIT_DURATION_IN_OPEN:30000} #하프 오픈 시간 : 30000
+        permittedNumberOfCallsInHalfOpenState: ${CB_PERMITTED_CALLS_IN_HALF_OPEN:5} #하프 오픈 시 트라이 횟수 : 5
 azure:
   eventgrid:
     endpoint: ${EVENTGRID_ENDPOINT}
